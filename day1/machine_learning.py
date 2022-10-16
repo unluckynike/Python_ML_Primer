@@ -3,7 +3,7 @@
 @File    ：machine_learning.py
 @Author  ：hailin
 @Date    ：2022/10/15 08:31 
-@Info    :  特征抽取 特征预处理 特征降维 主成分分析
+@Info    :  特征抽取 特征预处理 特征降维 主成分分析pca
 '''
 import jieba
 from sklearn.datasets import load_iris  # 鸢尾花数据
