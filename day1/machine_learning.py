@@ -3,7 +3,7 @@
 @File    ：machine_learning.py
 @Author  ：hailin
 @Date    ：2022/10/15 08:31 
-@Info    :  特征抽取 特征预处理 特征降维 主成分分析pca
+@Info    :  特征抽取 特征预处理 特征降维 主成分分析
 '''
 import jieba
 from sklearn.datasets import load_iris  # 鸢尾花数据
@@ -11,7 +11,10 @@ from sklearn.model_selection import train_test_split
 from sklearn.feature_extraction import DictVectorizer  # 特征提取
 from sklearn.feature_extraction.text import CountVectorizer,TfidfVectorizer  # 文本特征提取
 from sklearn.preprocessing import MinMaxScaler,StandardScaler # 归一化 标准化
+from sklearn.feature_selection import VarianceThreshold # 降维
+from sklearn.decomposition import PCA # PCA降维
 import pandas as pd
+from scipy.stats import pearsonr # 皮尔逊相关系数
 
 def datasets_demo():
     """
@@ -150,7 +153,50 @@ def stand_demo():
     transfer=StandardScaler()
     data_new=transfer.fit_transform(data)
     print("data_new:\n",data_new)
+    return None
 
+def variance_demo():
+    """
+    低方差特征过滤
+    :return:
+    """
+    # 1 获取数据
+    # 2 实例化一个转换器类
+    # 3 调用调用fit_transform
+    data=pd.read_csv("factor_returns.csv")
+    # index,pe_ratio,pb_ratio,market_cap,return_on_asset_net_profit,du_return_on_equity,ev,earnings_per_share,revenue,total_expense,date,return
+    print("data:\n", data.head())
+    data=data.iloc[:,1:-2]# 行全要 ， 列从第一列到 倒数第二列
+    # print("data:\n", data.head())
+    transfer=VarianceThreshold() # 可以设置阈值过滤低方差特征
+    data_new=transfer.fit_transform(data)
+    print("data_new:\n",data_new)
+    print("shape:",data_new.shape) # 原来是9列现在还是9列，说明没有方差为0的
+    # 计算某两个变量之间的相关系数 皮尔森相关系数
+    """
+    pearsonr
+    Returns
+    -------
+    r : float
+        Pearson's correlation coefficient.
+    p-value : float
+        Two-tailed p-value.
+    """
+    r=pearsonr(data["pe_ratio"],data["pb_ratio"])
+    print("pe_ratio,pb_ratio 皮尔森相关系数：",r)
+    r2=pearsonr(data["revenue"],data["total_expense"])
+    print("revenue,total_expense 皮尔森相关系数：", r2)# (0.9958450413136078, 0.0)
+    return None
+
+def pac_demo():
+    """
+    PAC Principal components analysis 降维 主成分分析
+    :return:
+    """
+    data = [[2,8,4,5], [6,3,0,8], [5,4,9,1]]
+    transfer=PCA(n_components=2) # 四个特征降为两个特征
+    data_new=transfer.fit_transform(data)
+    print("data_new:\n",data_new)
     return None
 
 if __name__ == '__main__':
@@ -173,4 +219,8 @@ if __name__ == '__main__':
     # minmax_demo()
     # 代码八：标准化
     # stand_demo()
-    """ 特征绛维度 """
+    """ 特征降维 """
+    # 代码九：低方差特征过滤
+    # variance_demo()
+    # 代码十：PAC降维
+    pac_demo()
