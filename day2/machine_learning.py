@@ -151,5 +151,5 @@ if __name__ == '__main__':
     #  knn_iris_gsc()
     # 代码三：用朴素贝叶斯算法对新闻进行分类
     #  nb_new()
-    # 决策树
+    # 代码四： 用决策树对鸢尾花进行分类
     decision_iris()
