@@ -116,7 +116,7 @@ def nb_new():
 
     # 方法2：计算准确率
     score = estimator.score(x_test, y_test)
-    print("准确率为：\n", score)
+    print("准确率:\n", score)
 
     return None
 
@@ -128,3 +128,4 @@ if __name__ == '__main__':
     # knn_iris_gsc()
     # 代码三：用朴素贝叶斯算法对新闻进行分类
     nb_new()
+    # 决策树
