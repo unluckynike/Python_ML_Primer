@@ -13,6 +13,7 @@ from sklearn.preprocessing import StandardScaler  # 标准化
 from sklearn.datasets import fetch_20newsgroups  # 20新闻分类
 from sklearn.feature_extraction.text import TfidfVectorizer  # 文本特征抽取
 from sklearn.naive_bayes import MultinomialNB  # 朴素贝叶斯
+from sklearn.tree import DecisionTreeClassifier,export_graphviz # 决策树 决策树可视化
 
 
 def knn_iris():
@@ -30,8 +31,8 @@ def knn_iris():
     # 3特征工程 标准化
     transfer = StandardScaler()
     x_train = transfer.fit_transform(x_train)
-    # x_test = transfer.transform(x_test)
-    x_test = transfer.fit_transform(x_test)
+    x_test = transfer.transform(x_test)
+    # x_test = transfer.fit_transform(x_test)
 
     # 4KNN算法预估器
     estimator = KNeighborsClassifier(n_neighbors=3)
@@ -63,14 +64,13 @@ def knn_iris_gsc():
     # 3 特征工程 标准
     transfer = StandardScaler()
     x_train = transfer.fit_transform(x_train)
-    # x_test = transfer.transform(x_test)
-    x_test = transfer.fit_transform(x_test)
-
+    x_test = transfer.transform(x_test)
+    # x_test = transfer.fit_transform(x_test)
 
     # 4 KNN算法预估器
     estimate = KNeighborsClassifier()  # 默认欧式距离
     # 加入网格搜索与交叉验证
-    param_dic = {"n_neighbors": [1, 3, 5, 7, 9, 11]}
+    param_dic = {"n_neighbors": [1, 3, 5, 7, 9, 11]} # 多个参数放进去试
     estimate = GridSearchCV(estimate, param_grid=param_dic, cv=10)
     estimate.fit(x_train, y_train)
 
@@ -107,7 +107,7 @@ def nb_new():
 
     # 4朴素贝叶斯算法预估器流程
     estimator = MultinomialNB()
-    estimator.fit(x_train, y_train)
+    estimator.fit(x_train, y_train) # fit 方法进行训练 Fit Naive Bayes classifier according to X, y
     # 5模型评估
     # 方法1：直接比对真实值和预测值
     y_predict = estimator.predict(x_test)
@@ -117,15 +117,39 @@ def nb_new():
     # 方法2：计算准确率
     score = estimator.score(x_test, y_test)
     print("准确率:\n", score)
-
     return None
 
+def decision_iris():
+    """
+    用决策树对鸢尾花进行分类
+    :return:
+    """
+    iris=load_iris()
+    x_train,x_test,y_train,y_test=train_test_split(iris.data,iris.target,random_state=6)
+
+    # 决策树模预估器
+    estimator=DecisionTreeClassifier(criterion="entropy")
+    estimator.fit(x_train,y_train)
+
+    y_predict=estimator.predict(x_test)
+    print("y_predict:\n",y_predict)
+    print("y_test:\n",y_test)
+    print("直接对比：\n",y_predict==y_test)
+
+    socre=estimator.score(x_test,y_test)
+    print("准确率：\n",socre)
+
+    # 决策树可视化
+    export_graphviz(estimator,out_file="iris_tree.dot",feature_names=iris.feature_names)
+
+    return None
 
 if __name__ == '__main__':
     # 代码一：用KNN算法对鸢尾花进行分类
     # knn_iris()
     # 代码二：用KNN算法对鸢尾花进行分类 添加网格搜索与交叉验证
-    # knn_iris_gsc()
+    #  knn_iris_gsc()
     # 代码三：用朴素贝叶斯算法对新闻进行分类
-    nb_new()
+    #  nb_new()
     # 决策树
+    decision_iris()
