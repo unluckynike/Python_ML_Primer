@@ -41,7 +41,6 @@ def line1():
 
     return None
 
-
 def line2():
     """
     梯度下降的方法 预测波士顿房价
