@@ -53,6 +53,8 @@ def knn_iris():
 def knn_iris_gsc():
     """
     用KNN算法对鸢尾花进行分类 添加网格搜索与交叉验证
+    k取值，过小容易受到异常值定影响，过大容易受到样本不均衡定影响
+    应用场景：少量数据
     :return:
     """
     # 1 加载数据
@@ -94,6 +96,10 @@ def knn_iris_gsc():
 def nb_new():
     """
     用朴素贝叶斯算法对新闻进行分类
+    朴素：假定了特征与特征直接相互独立
+    贝叶斯：贝叶斯公式
+    拉普拉斯平滑系数
+    应用场景：文本分类
     :return:
     """
     # 1获取数据
@@ -122,6 +128,9 @@ def nb_new():
 def decision_iris():
     """
     用决策树对鸢尾花进行分类
+    找到最高效定决策顺序-信息增益
+    信息增益=信息熵-条件熵
+    可视化，可解释能力强
     :return:
     """
     iris=load_iris()
@@ -141,7 +150,6 @@ def decision_iris():
 
     # 决策树可视化
     export_graphviz(estimator,out_file="iris_tree.dot",feature_names=iris.feature_names)
-
     return None
 
 if __name__ == '__main__':
